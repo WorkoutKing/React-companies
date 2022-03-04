@@ -1,5 +1,5 @@
 import { Table } from "react-bootstrap";
-import {Container, Row,Col} from "react-bootstrap";
+import {Container, Navbar, Nav, NavDropdown, Dropdown, ButtonGroup, DropdownButton} from "react-bootstrap";
 import { useState, useEffect } from "react";
 import RenderCompanies from "./RenderCompanies";
 import { Grid, Button,Link as Nv } from '@material-ui/core'
@@ -23,7 +23,7 @@ const Main = ()=>{
     }
     const[companies, setCompanies] = useState("")
     useEffect(()=>{
-        fetch('https://laravel.ddev.site/api/companies')
+        fetch('http://laravel.ddev.site/api/companies')
             .then(response => response.json())
             .then(data=>{
                 setCompanies(data)
@@ -37,16 +37,38 @@ const Main = ()=>{
         <>
         <Container>
         {!user == '' ? (
-              <Row>
-             <Col><h4>{user}</h4></Col>          
-               <Col><Button type='submit' className='mt-3' onClick={logout} color='primary' variant="contained"  style={{textAlign: 'right'}}>Logout</Button></Col>
-            </Row>
+                <Navbar bg="dark" variant="dark" >
+                   <Navbar.Brand href="/">HOME</Navbar.Brand>
+                    <Navbar.Collapse className="justify-content-end">
+                     <Dropdown variant="dark" as={ButtonGroup}>
+                        <Navbar.Text>
+                            <Button>
+                            <p style={{color:'#fff'}} className="mb-1">Hello, {user}</p>
+                            </Button>
+                        </Navbar.Text>
+                        <Dropdown.Toggle split variant="dark" id="dropdown-split-basic" />
+                        <Dropdown.Menu>
+                            <Dropdown.Item href="/" onClick={logout}>Logout</Dropdown.Item>
+                        </Dropdown.Menu>
+                        </Dropdown>
+                        </Navbar.Collapse>
+               </Navbar>
             ) : (
-                <div style={{textAlign: 'right'}} className=''>
-                    <a className="btn btn-primary m-2" href="/signup">Register</a>
-                    <a className="btn btn-primary" href="/login">Login</a>
-                </div>
+                <Navbar bg="dark" variant="dark">
+                <Navbar.Brand href="/">Home</Navbar.Brand>
+                <Nav className="me-auto">
+                  
+                </Nav>
+                <Navbar.Collapse className="justify-content-end">
+                          <Navbar.Text>
+                            <Nav.Link href="/login">Login</Nav.Link>
+                        </Navbar.Text>
+                        <Navbar.Text>
+                            <Nav.Link href="/signup">Register</Nav.Link>
+                        </Navbar.Text>
+                </Navbar.Collapse>
 
+              </Navbar>
            )}
             
                 <Table striped bordered hover>

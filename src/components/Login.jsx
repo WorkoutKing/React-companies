@@ -1,10 +1,12 @@
 import React from 'react'
-import { Grid,Paper, Avatar, TextField, Button, Typography,Link as Nv } from '@material-ui/core'
+import { Grid,Paper, Avatar, TextField, Button, Typography, Input} from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Link, NavLink } from "react-router-dom";
 import {useState} from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
+import {Container, Navbar,Nav} from "react-bootstrap";
+import validator from 'validator'
  
 const Login=()=>{
  
@@ -25,6 +27,7 @@ const Login=()=>{
       let history = useNavigate(); 
  
       const {email,password} = user;
+
       const onInputChange = e => {
         setUser({ ...user, [e.target.name]: e.target.value });
       };
@@ -33,38 +36,58 @@ const Login=()=>{
     {
  
       const users = { username };  // To Store Email in Localstore and send to Home Page 
- 
-       if(user.email === '')
+      
+       if(user.email === '' )
        {
-         alert('Email Field is empty')
+         alert('Email Field is empty or bad format')
        }
-       else if(user.password === '')
+       if(user.password === '' | user.password.length !== 3)
        {
-         alert('Pass Field is empty')
+         alert('Pass Field is empty, symbols must to be 3-12')
        }
  
        axios.post("http://laravel.ddev.site/api/login/",user)
        .then(response => {
         setMsg(response.data);
-        localStorage.setItem("users", response.data);
+        localStorage.setItem("users", response.data.name);
         history("/");
-        console.log(response.data);
+        console.log(response.data.name);
       });
     }
- 
     
+
     return(
+      <>
+      {!user == '' ? (
+        <Navbar bg="dark" variant="dark">
+              <Navbar.Brand href="/">HOME</Navbar.Brand>
+                  <Navbar.Collapse className="justify-content-end">
+                    <Navbar.Text>
+                     <Nav.Link href="/login">Login</Nav.Link>
+                    </Navbar.Text>
+                    <Navbar.Text>
+                     <Nav.Link href="/signup">Register</Nav.Link>
+                    </Navbar.Text>
+                </Navbar.Collapse>
+          </Navbar>
+      ) : (
+          <Navbar bg="dark" variant="dark">
+          <Navbar.Brand href="/">Home</Navbar.Brand>
+          <Nav className="me-auto">
+          </Nav>
+        </Navbar>
+     )}
         <Grid>
             <Paper elevation={10} style={paperStyle}>
                 <Grid align='center'>
                   <Avatar style={avatarStyle}><LockOutlinedIcon/></Avatar>
                     <h2>Sign In</h2>
                 </Grid>
-                <TextField label='Email'  name="email" value={email}  onChange={e => onInputChange(e)} placeholder='Enter Email' type='text' fullWidth required/>
-                <TextField label='Password'  name="password" value={password}  onChange={e => onInputChange(e)} placeholder='Enter password' type='text' fullWidth required/>
-              
+                <TextField label='Email' name="email" value={email} onChange={e => onInputChange(e)} 
+                placeholder='sophie@example.com *' type="email" 
+                fullWidth required/>
+                <TextField label='Password'  name="password" value={password}  onChange={e => onInputChange(e)} placeholder='Enter password' type='password' fullWidth required/>
                 <Button type='submit' onClick={signIn} color='primary' variant="contained" style={btnstyle} fullWidth>Sign in</Button>
-              
                 <Typography style={{textAli:'center'}}> Don't Have Account ?
                   <NavLink to="/signup">
                    <span style={{marginLeft:"60px"}}>Sing up</span>
@@ -75,6 +98,7 @@ const Login=()=>{
                 </Typography>
             </Paper>
         </Grid>
+        </>
     )
 }
  

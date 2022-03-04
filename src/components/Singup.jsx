@@ -4,6 +4,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Link, NavLink } from "react-router-dom";
 import {useState} from 'react';
 import axios from 'axios';
+import {Container, Navbar,Nav} from "react-bootstrap";
  
 const Signup=()=>{
  
@@ -28,10 +29,30 @@ const Signup=()=>{
         let result = await axios.post("http://laravel.ddev.site/api/register",user);
         setErrors('Registration Successful')
         setUser({name:"",email:"",password:""}) // To Clear all fields
- 
-        }  
+        }
+
      
     return(
+        <>
+        {!user == '' ? (
+            <Navbar bg="dark" variant="dark">
+            <Navbar.Brand href="/">HOME</Navbar.Brand>
+                <Navbar.Collapse className="justify-content-end">
+                        <Navbar.Text>
+                            <Nav.Link href="/login">Login</Nav.Link>
+                        </Navbar.Text>
+                        <Navbar.Text>
+                            <Nav.Link href="/signup">Register</Nav.Link>
+                        </Navbar.Text>
+                </Navbar.Collapse>
+          </Navbar>
+          ) : (
+              <Navbar bg="dark" variant="dark">
+              <Navbar.Brand href="/">Home</Navbar.Brand>
+              <Nav className="me-auto">
+              </Nav>
+            </Navbar>
+         )}
         <Grid>
             <Paper elevation={10} style={paperStyle}>
                 <Grid align='center'>
@@ -41,8 +62,8 @@ const Signup=()=>{
                 </Grid>
                 
                 <TextField label='Name' name="name" value={name} onChange={e => onInputChange(e)} placeholder='Enter Name' type='text' fullWidth required/>
-                <TextField label='Email'  name="email" value={email}  onChange={e => onInputChange(e)} placeholder='Enter Email' type='text' fullWidth required/>
-                <TextField label='Password'  name="password" value={password}  onChange={e => onInputChange(e)} placeholder='Enter password' type='text' fullWidth required/>
+                <TextField label='Email'  name="email" value={email}  onChange={e => onInputChange(e)} placeholder='Enter Email' type='email' fullWidth required/>
+                <TextField label='Password'  name="password" value={password}  onChange={e => onInputChange(e)} placeholder='Enter password' type='password' fullWidth required/>
              
                 <Button type='submit' onClick={signup} color='primary' variant="contained" style={btnstyle} fullWidth>Singup</Button>
               
@@ -53,6 +74,7 @@ const Signup=()=>{
                 </Typography>
             </Paper>
         </Grid>
+        </>
     )
 }
  
