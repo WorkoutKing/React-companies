@@ -1,12 +1,12 @@
 import { Table } from "react-bootstrap";
 import {Container, Navbar, Nav, NavDropdown, Dropdown, ButtonGroup, DropdownButton} from "react-bootstrap";
 import { useState, useEffect } from "react";
-import RenderCompanies from "./RenderCompanies";
+import RenderMyCompanies from "./RenderMyCompanies";
 import { Grid, Button,Link as Nv } from '@material-ui/core'
 import { useNavigate, useParams } from "react-router-dom";
 
 
-const Main = ()=>{
+const UserCompany = ()=>{
     const paperStyle={padding :20,height:'70vh',width:280, margin:"20px auto"}
     const avatarStyle={backgroundColor:'#3370bd'}
  
@@ -23,11 +23,11 @@ const Main = ()=>{
     }
     const[companies, setCompanies] = useState("")
     useEffect(()=>{
-        fetch('http://laravel.ddev.site/api/companies')
+        fetch('http://laravel.ddev.site/api/user-company')
             .then(response => response.json())
             .then(data=>{
-                setCompanies(data)
-                console.log(data)
+                setCompanies(data);
+                console.log(data.data);
             })
             .catch(error => {
                 throw(error);
@@ -80,11 +80,11 @@ const Main = ()=>{
                         <th>Code</th>
                         <th>Address</th>
                         <th>Director</th>
-                        <th>More...</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
-                            {(companies.data)?companies.data.map((w)=><RenderCompanies key={w.id} id={w.id} code={w.code} company={w.company} address={w.address} director={w.director}/>):null}
+                            {(companies.data)?companies.data.map((w)=><RenderMyCompanies key={w.id} id={w.id} code={w.code} company={w.company} address={w.address} director={w.director} user_id={w.user}/>):null}
                     </tbody>
                 </Table>
             
@@ -92,4 +92,4 @@ const Main = ()=>{
         </>
     )
 }
-export default Main
+export default UserCompany

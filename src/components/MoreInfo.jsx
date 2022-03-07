@@ -1,6 +1,8 @@
 import {Link, useParams} from "react-router-dom";
 import {Card, Container} from "react-bootstrap";
 import { useState, useEffect } from "react";
+import { Navbar,Nav} from "react-bootstrap";
+
 const MoreInfo = ()=>{
     const {id} = useParams();
     const[company, setCompany] = useState({
@@ -18,6 +20,12 @@ const MoreInfo = ()=>{
               })
       },[setCompany, id])
     return(
+        <>
+          <Navbar bg="dark" variant="dark">
+            <Navbar.Brand href="/">Home</Navbar.Brand>
+          <Nav className="me-auto">
+          </Nav>
+        </Navbar>
         <Container>
             <Card style={{ width: '25rem' }}>
                 <Card.Body>
@@ -33,8 +41,8 @@ const MoreInfo = ()=>{
                     </Card.Footer>
                 </Card.Body>
             </Card>
-            <div ><Link to={`/`} style={{backgroundColor: "lightblue"}}>Home</Link></div>
         </Container>
+        </>
     )
 }
 export default MoreInfo

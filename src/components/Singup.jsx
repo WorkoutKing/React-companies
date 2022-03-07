@@ -1,14 +1,14 @@
 import React from 'react'
 import { Grid,Paper, Avatar, TextField, Button, Typography } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {useState} from 'react';
 import axios from 'axios';
-import {Container, Navbar,Nav} from "react-bootstrap";
+import {Navbar,Nav} from "react-bootstrap";
  
 const Signup=()=>{
  
-    const paperStyle={padding :20,height:'70vh',width:280, margin:"20px auto"}
+    const paperStyle={padding :20,height:'350px',width:280, margin:"20px auto"}
     const avatarStyle={backgroundColor:'#3370bd'}
     const btnstyle={margin:'8px 0'}
  

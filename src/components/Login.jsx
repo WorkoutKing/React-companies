@@ -1,16 +1,15 @@
 import React from 'react'
-import { Grid,Paper, Avatar, TextField, Button, Typography, Input} from '@material-ui/core'
+import { Grid,Paper, Avatar, TextField, Button, Typography} from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { Link, NavLink } from "react-router-dom";
+import {NavLink } from "react-router-dom";
 import {useState} from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from "react-router-dom";
-import {Container, Navbar,Nav} from "react-bootstrap";
-import validator from 'validator'
- 
+import { useNavigate } from "react-router-dom";
+import {Navbar,Nav} from "react-bootstrap";
+
 const Login=()=>{
  
-    const paperStyle={padding :20,height:'70vh',width:280, margin:"20px auto"}
+    const paperStyle={padding :20,height:'320px',width:280, margin:"20px auto"}
     const avatarStyle={backgroundColor:'#3370bd'}
     const btnstyle={margin:'8px 0'}
      
@@ -41,7 +40,7 @@ const Login=()=>{
        {
          alert('Email Field is empty or bad format')
        }
-       if(user.password === '' | user.password.length !== 3)
+       else if(user.password === '')
        {
          alert('Pass Field is empty, symbols must to be 3-12')
        }
@@ -50,15 +49,15 @@ const Login=()=>{
        .then(response => {
         setMsg(response.data);
         localStorage.setItem("users", response.data.name);
+        localStorage.setItem("usersid", response.data.id);
         history("/");
-        console.log(response.data.name);
       });
     }
     
 
     return(
       <>
-      {!user == '' ? (
+      {!user === '' ? (
         <Navbar bg="dark" variant="dark">
               <Navbar.Brand href="/">HOME</Navbar.Brand>
                   <Navbar.Collapse className="justify-content-end">
