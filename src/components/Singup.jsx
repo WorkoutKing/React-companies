@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import {useState} from 'react';
 import axios from 'axios';
 import {Navbar,Nav} from "react-bootstrap";
+import Footer from "./Footer";
  
 const Signup=()=>{
  
@@ -74,6 +75,7 @@ const Signup=()=>{
                 </Typography>
             </Paper>
         </Grid>
+        <Footer/>
         </>
     )
 }

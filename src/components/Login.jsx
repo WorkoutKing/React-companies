@@ -6,6 +6,7 @@ import {useState} from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import {Navbar,Nav} from "react-bootstrap";
+import Footer from "./Footer";
 
 const Login=()=>{
  
@@ -50,6 +51,9 @@ const Login=()=>{
         setMsg(response.data);
         localStorage.setItem("users", response.data.name);
         localStorage.setItem("usersid", response.data.id);
+        localStorage.setItem("userstoken", response.data.token);
+        console.log(response.data.token)
+
         history("/");
       });
     }
@@ -97,6 +101,7 @@ const Login=()=>{
                 </Typography>
             </Paper>
         </Grid>
+        <Footer/>
         </>
     )
 }

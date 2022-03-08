@@ -5,6 +5,7 @@ import Login from './components/Login';
 import Signup from "./components/Singup";
 import AddCompany from "./components/AddCompany";
 import UserCompany from "./components/UserCompany";
+import Update from "./components/Update";
 
 
 
@@ -19,6 +20,7 @@ const App  = ()=>{
                     <Route path="/add-company" element={<AddCompany/>} />
                     <Route path="/Login" element={<Login/>} />
                     <Route path="/user-company" element={<UserCompany/>} />
+                    <Route path="/update/:id" element={<Update/>} />
                 </Routes>
 
             </Router>

@@ -4,6 +4,7 @@ import {Container, Navbar, Nav, NavDropdown, Dropdown, ButtonGroup, DropdownButt
 import axios from 'axios';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { useNavigate, useParams } from "react-router-dom";
+import Footer from "./Footer";
 
 
 const AddCompany = ()=>{
@@ -70,14 +71,12 @@ const AddCompany = ()=>{
                     <Navbar.Collapse className="justify-content-end">
                      <Dropdown variant="dark" as={ButtonGroup}>
                         <Navbar.Text>
-                            <Button>
                             <p style={{color:'#fff'}} className="mb-1">Hello, {user}</p>
-                            </Button>
                         </Navbar.Text>
                         <Dropdown.Toggle split variant="dark" id="dropdown-split-basic" />
                         <Dropdown.Menu>
                             <Dropdown.Item href="/login" onClick={logout}>Logout</Dropdown.Item>
-                            <Dropdown.Item href="/add-company" >Add company</Dropdown.Item>
+                            <Dropdown.Item href="/user-company" >Your company list</Dropdown.Item>
                         </Dropdown.Menu>
                         </Dropdown>
                         </Navbar.Collapse>
@@ -117,6 +116,7 @@ const AddCompany = ()=>{
             <Button type='submit' onClick={addCompany} color='primary' variant="contained" fullWidth>Add Company</Button>
         </Paper>
     </Grid>
+    <Footer/>
     </>
     );
 

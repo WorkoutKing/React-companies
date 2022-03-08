@@ -1,38 +1,37 @@
 import { Table } from "react-bootstrap";
-import {Container, Navbar, Nav, NavDropdown, Dropdown, ButtonGroup, DropdownButton} from "react-bootstrap";
+import {Container, Navbar, Nav, Dropdown, ButtonGroup} from "react-bootstrap";
 import { useState, useEffect } from "react";
 import RenderCompanies from "./RenderCompanies";
-import { Grid, Button,Link as Nv } from '@material-ui/core'
+import { Button} from '@material-ui/core'
 import { useNavigate, useParams } from "react-router-dom";
-
+import axios from 'axios';
+import Footer from "./Footer";
 
 const Main = ()=>{
     const paperStyle={padding :20,height:'70vh',width:280, margin:"20px auto"}
-    const avatarStyle={backgroundColor:'#3370bd'}
- 
     const {users} = useParams();  
-    let history = useNavigate(); 
- 
-    const user = localStorage.getItem("users");
-    console.log(user);
-      
+    let history = useNavigate();
+
+    const user = localStorage.getItem("users");      
     const logout = () => 
     {
         localStorage.removeItem("users")
         history("/login");
     }
     const[companies, setCompanies] = useState("")
+
     useEffect(()=>{
-        fetch('http://laravel.ddev.site/api/companies')
-            .then(response => response.json())
-            .then(data=>{
-                setCompanies(data)
-                console.log(data)
-            })
-            .catch(error => {
-                throw(error);
-            })
-    },[setCompanies])
+        fetchCompanies() 
+    },[])
+
+    const fetchCompanies = async () => {
+        await axios.get('http://laravel.ddev.site/api/companies').then(response=>{
+            setCompanies(response.data);
+            console.log(response.data);
+        },[setCompanies])
+    }
+    
+    
     return(
         <>
         <Container>
@@ -42,9 +41,7 @@ const Main = ()=>{
                     <Navbar.Collapse className="justify-content-end">
                      <Dropdown variant="dark" as={ButtonGroup}>
                         <Navbar.Text>
-                            <Button>
                             <p style={{color:'#fff'}} className="mb-1">Hello, {user}</p>
-                            </Button>
                         </Navbar.Text>
                         <Dropdown.Toggle split variant="dark" id="dropdown-split-basic" />
                         <Dropdown.Menu>
@@ -87,7 +84,7 @@ const Main = ()=>{
                             {(companies.data)?companies.data.map((w)=><RenderCompanies key={w.id} id={w.id} code={w.code} company={w.company} address={w.address} director={w.director}/>):null}
                     </tbody>
                 </Table>
-            
+            <Footer/>
             </Container>
         </>
     )

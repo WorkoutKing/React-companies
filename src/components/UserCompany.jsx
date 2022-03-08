@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import RenderMyCompanies from "./RenderMyCompanies";
 import { Grid, Button,Link as Nv } from '@material-ui/core'
 import { useNavigate, useParams } from "react-router-dom";
+import Footer from "./Footer";
 
 
 const UserCompany = ()=>{
@@ -15,6 +16,9 @@ const UserCompany = ()=>{
  
     const user = localStorage.getItem("users");
     console.log(user);
+    const userstoken = localStorage.getItem("userstoken");
+    console.log(userstoken);
+      
       
     const logout = () => 
     {
@@ -42,9 +46,7 @@ const UserCompany = ()=>{
                     <Navbar.Collapse className="justify-content-end">
                      <Dropdown variant="dark" as={ButtonGroup}>
                         <Navbar.Text>
-                            <Button>
                             <p style={{color:'#fff'}} className="mb-1">Hello, {user}</p>
-                            </Button>
                         </Navbar.Text>
                         <Dropdown.Toggle split variant="dark" id="dropdown-split-basic" />
                         <Dropdown.Menu>
@@ -87,7 +89,7 @@ const UserCompany = ()=>{
                             {(companies.data)?companies.data.map((w)=><RenderMyCompanies key={w.id} id={w.id} code={w.code} company={w.company} address={w.address} director={w.director} user_id={w.user}/>):null}
                     </tbody>
                 </Table>
-            
+            <Footer/>
             </Container>
         </>
     )
