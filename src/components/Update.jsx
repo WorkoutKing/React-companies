@@ -6,20 +6,21 @@ import Col from 'react-bootstrap/Col';
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import {Container, Navbar, Nav, NavDropdown, Dropdown, ButtonGroup, DropdownButton} from "react-bootstrap";
-import { Grid,Paper, Avatar, TextField} from '@material-ui/core';
+import {Navbar, Nav,Dropdown, ButtonGroup} from "react-bootstrap";
+import { Grid,Paper,FormControl} from '@material-ui/core';
+import Category from "./Category";
 
 
 
 export default function Update() {
   
   const userstoken = localStorage.getItem("userstoken");
-  console.log(userstoken);
   let history = useNavigate(); 
   const user = localStorage.getItem("users");
-
   const navigate = useNavigate();
-
+  const [categories, setCategories] = useState({
+    data: ""
+})
   const logout = () => 
   {
       localStorage.removeItem("users")
@@ -41,6 +42,18 @@ export default function Update() {
   useEffect(()=>{
     fetchProduct()
   },[])
+  useEffect(()=>{
+    fetch('http://laravel.ddev.site/api/category')
+        .then(response => response.json())
+        .then(data=>{
+            setCategories(data)
+            console.log(data)
+        })
+
+        .catch(error => {
+            throw(error);
+        })
+},[setCategories])
 
   const fetchProduct = async () => {
     await axios.get(`http://laravel.ddev.site/api/company/${id}`).then(({data})=>{
@@ -212,15 +225,22 @@ export default function Update() {
                         </Form.Group>
                       </Col>  
                   </Row>
-                    <Row> 
+                  <Row>
                       <Col>
-                        <Form.Group controlId="Name">
-                            <Form.Label>Category</Form.Label>
-                            <Form.Control type="text" value={category_id} onChange={(event)=>{
-                              setCategory_id(event.target.value)
-                            }}/>
-                        </Form.Group>
-                      </Col>  
+                        <Form.Group className="mt-2">
+                            <FormControl fullWidth>
+                                            <select
+                                                style={{ height:'30px',borderTop:'none', backgroundColor:'#fff'}}
+                                                type="text" value={category_id} onChange={(event)=>{
+                                                setCategory_id(event.target.value)
+                                            }}
+                                            >
+                                                <option value="" selected disabled></option>
+                                                {(categories.data.length)? categories.data.map((w)=><Category key={w.id} id={w.id} category={w.category}/>):null}
+                                            </select>
+                            </FormControl>
+                          </Form.Group>
+                      </Col>
                   </Row>
                   <Row className='invisible'> 
                       <Col>

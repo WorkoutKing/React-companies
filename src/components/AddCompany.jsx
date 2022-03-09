@@ -1,25 +1,23 @@
-import React, {useState} from 'react';
-import { Grid,Paper, Avatar, TextField, Button} from '@material-ui/core';
-import {Container, Navbar, Nav, NavDropdown, Dropdown, ButtonGroup, DropdownButton} from "react-bootstrap";
+import React, {useState, useEffect} from 'react';
+import { Grid,Paper, Avatar, TextField, Button, FormControl} from '@material-ui/core';
+import {Navbar, Nav,Dropdown, ButtonGroup} from "react-bootstrap";
 import axios from 'axios';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { useNavigate, useParams } from "react-router-dom";
 import Footer from "./Footer";
-
+import Category from "./Category";
 
 const AddCompany = ()=>{
     
     const paperStyle={padding :20,height:'550px',width:280, margin:"20px auto"}
     const avatarStyle={backgroundColor:'#3370bd'}
-
     const {users} = useParams();  
     let history = useNavigate(); 
-    
     const userid= localStorage.getItem("usersid");
-    console.log(userid)
-
     const user = localStorage.getItem("users");
-    console.log(user);
+    const [category, setCategory] = useState({
+        data: ""
+    })
 
     const logout = () => 
     {
@@ -39,6 +37,18 @@ const AddCompany = ()=>{
         user_id: userid,
         
     });
+    useEffect(()=>{
+        fetch('http://laravel.ddev.site/api/category')
+            .then(response => response.json())
+            .then(data=>{
+                setCategory(data)
+                console.log(data)
+            })
+
+            .catch(error => {
+                throw(error);
+            })
+    },[setCategory])
 
    
 
@@ -47,10 +57,14 @@ const AddCompany = ()=>{
         setCompany({...companys, [e.target.name]: e.target.value });
     };
     console.log(companys);
+
     async function  addCompany()
     {   
- let result = await axios.post("http://laravel.ddev.site/api/add-company",companys);
-        setErrors('Company added!')
+ let result = await axios.post("http://laravel.ddev.site/api/add-company",companys)
+                .then((response)=>{
+                    console.log(response.data)
+                    setErrors(response.data)
+                });
         setCompany({
                     company: '',
                     code: '',
@@ -58,11 +72,10 @@ const AddCompany = ()=>{
                     address: '',
                     director: '',
                     description: '',
-                    user_id: '',
+                    user_id: userid,
                     category_id: '' });
-                    history("/user-company");
+                    
     }
-
     return (
         <>
                 {!user == '' ? (
@@ -98,12 +111,41 @@ const AddCompany = ()=>{
 
               </Navbar>
            )}
+           
+           
         <Grid>
+        {
+                            Object.keys(errors).length > 0 && errors[0] != "Company created succesfully" && (
+                                <Grid>
+                                    <Paper style={{padding :30, width:600, margin:"30px auto"}}>
+                                        <div className="alert alert-danger">
+                                            {
+                                                Object.entries(errors).map(([key, value])=>(
+                                                    <div key={key}>{value}</div>
+                                                ))
+                                            }
+                                        </div>
+                                    </Paper>
+                                </Grid>)
+                        }
+                        {
+                            Object.keys(errors).length > 0 && errors[0] == "Company created succesfully" && (
+                                <Grid>
+                                    <Paper style={{padding :30, width:600, margin:"30px auto"}}>
+                                        <div className="alert alert-success">
+                                            {
+                                                Object.entries(errors).map(([key, value])=>(
+                                                    <div key={key}>{value}</div>
+                                                ))
+                                            }
+                                        </div>
+                                    </Paper>
+                                </Grid>)
+                        }
         <Paper style={paperStyle}>
             <Grid align='center'>
                  <Avatar style={avatarStyle}><LockOutlinedIcon/></Avatar>
                 <h2>ADD COMPANY</h2>
-                <h3 style={{color:"green"}}>{errors}</h3>
             </Grid>
             <TextField label='Company' name="company" value={company} onChange={e => onInputChange(e)} type='text' fullWidth required/>
             <TextField label='Code'  name="code" value={code}  onChange={e => onInputChange(e)} type='number' fullWidth required/>
@@ -111,7 +153,18 @@ const AddCompany = ()=>{
             <TextField label='Address'  name="address" value={address}  onChange={e => onInputChange(e)} type='text' fullWidth required/>
             <TextField label='Ceo'  name="director" value={director}  onChange={e => onInputChange(e)} type='text' fullWidth required/>
             <TextField label='Description'  name="description" value={description}  onChange={e => onInputChange(e)} type='text' fullWidth required/>
-            <TextField label='Category'  name="category_id" value={category_id}  onChange={e => onInputChange(e)} type='number' fullWidth required/>
+            <FormControl fullWidth>
+                                <select
+                                    style={{ height:'30px',borderTop:'none', backgroundColor:'#fff'}}
+                                    id="demo-simple-select"
+                                    value={category_id}
+                                    name="category_id"
+                                    onChange={e => onInputChange(e)}
+                                >
+                                    <option value="" selected disabled>--SELECT CATEGORY--</option>
+                                    {(category.data.length)? category.data.map((w)=><Category key={w.id} id={w.id} category={w.category}/>):null}
+                                </select>
+                            </FormControl>
             <TextField label='User' className="invisible"  name="user_id" onChange={e => onInputChange(e)} type='number' value={user_id} fullWidth required/>
             <Button type='submit' onClick={addCompany} color='primary' variant="contained" fullWidth>Add Company</Button>
         </Paper>
