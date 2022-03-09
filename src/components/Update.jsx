@@ -7,6 +7,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {Container, Navbar, Nav, NavDropdown, Dropdown, ButtonGroup, DropdownButton} from "react-bootstrap";
+import { Grid,Paper, Avatar, TextField} from '@material-ui/core';
+
 
 
 export default function Update() {
@@ -34,7 +36,7 @@ export default function Update() {
   const [user_id,setUser_id] = useState("")
   const [category_id,setCategory_id] = useState("")
 
-  const [validationError,setValidationError] = useState({})
+  const [validationError,setValidationError] = useState('')
 
   useEffect(()=>{
     fetchProduct()
@@ -73,23 +75,9 @@ export default function Update() {
     formData.append('category_id', category_id);
 
     await axios.post(`http://laravel.ddev.site/api/update/${id}`, formData)
-    .then(({data})=>{
-      Swal.fire({
-        title:'SUCCESSFULL UPDATED',
-        icon:"success",
-        text:data.message
-        
-      })
-      navigate("/user-company")
-    }).catch(({response})=>{
-      if(response.status===422){
-        setValidationError(response.data.errors)
-      }else{
-        Swal.fire({
-          text:response.data.message,
-          icon:"error"
-        })
-      }
+    .then((response)=>{
+      console.log(response.data)
+      setValidationError(response.data)
     })
   }
 
@@ -131,32 +119,38 @@ export default function Update() {
     </Navbar>
  )}
   
+  <div className="form-wrapper">
+                    {
+                        Object.keys(validationError).length > 0 && validationError[0] != "Company updated successfully" && (
+                            <Grid>
+                                <Paper style={{padding :30, width:600, margin:"30px auto"}}>
+                            <div className="alert alert-danger">
+                                {
+                                    Object.entries(validationError).map(([key, value])=>(
+                                        <div key={key}>{value}</div>
+                                    ))
+                                }
+                            </div>
+                                </Paper>
+                            </Grid>)
+                    }
+                    {
+                        Object.keys(validationError).length > 0 && validationError[0] == "Company updated successfully" && (
+                            <Grid>
+                                <Paper style={{padding :30, width:600, margin:"30px auto"}}>
+                                    <div className="alert alert-success">
+                                        {
+                                            Object.entries(validationError).map(([key, value])=>(
+                                                <div key={key}>{value}</div>
+                                            ))
+                                        }
+                                    </div>
+                                </Paper>
+                            </Grid>)
+                    }
+                </div>
     
-      <div className="row justify-content-center">
-        <div className="col-12 col-sm-12 col-md-6">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="card-title">Update Company:</h4>
-              <h5 style={{color:'red'}}>SOMETIMES THERE IS A BUG,WHILE UPDATING EVERY TIME CHANGE ATLEAST ONE LETTER, NUMBER OR CHANGE TO SAME IN EACH FIELD</h5>
-              <hr />
-              <div className="form-wrapper">
-                {
-                  Object.keys(validationError).length > 0 && (
-                    <div className="row">
-                      <div className="col-12">
-                        <div className="alert alert-danger">
-                          <ul className="mb-0">
-                            {
-                              Object.entries(validationError).map(([key, value])=>(
-                                <li key={key}>{value}</li>   
-                              ))
-                            }
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                }
+
                 <Form onSubmit={updateProduct}>
                   <Row> 
                       <Col>
@@ -228,7 +222,7 @@ export default function Update() {
                         </Form.Group>
                       </Col>  
                   </Row>
-                  <Row> 
+                  <Row className='invisible'> 
                       <Col>
                         <Form.Group controlId="Name">
                             <Form.Label>User</Form.Label>
@@ -243,12 +237,7 @@ export default function Update() {
                     Update
                   </Button>
                 </Form>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
    </> 
   )
 }
